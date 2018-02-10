@@ -285,9 +285,75 @@ Drop SMB session.
 net use \\[remote_ip] /del
 ```
 
-Drop al SMB session.
+Drop all SMB session.
 ```
 net use * /del /y
 ```
 
+---
 
+### Services ###
+Run against a remote system by adding `sc \\[remote_ip]` before all commands; over SMB session.
+```
+Windows:    sc \\[remote_ip] query
+Windows:    sc \\[remote_ip] query state=all
+Windows:    sc \\[remote_ip] qc [service_name]
+```
+
+List _ALL_ services.
+```
+Windows:    sc query state=all
+Linux:      ps -A
+Linux:      systemctl list-unit-files
+```
+
+List all running services.
+```
+Windows:    sc query
+Linux:      ps aux | less
+```
+
+Get service status.
+```
+Windows:    sc qc [service_name]
+Linux:      systemctl status [service_name]
+```
+
+Start status.
+```
+Windows:    sc start [service_name]
+Linux:      systemctl start [service_name]
+```
+
+Enable status.
+```
+Windows:    sc config [service_name] start=demand
+Linux:      systemctl enable [service_name]
+```
+
+Stop status.
+```
+Windows:    sc stop [service_name]
+Linux:      systemctl stop [service_name]
+```
+
+### For Loops ###
+`FOR /L` = Counter
+`FOR /F` = Iterate over file contents, strings, or command output
+Construction: `for /L %i ([start],[increment],[stop]) do [command]`
+Exmaples:
+```
+Windows:    for /L %i in (1,1,255) do echo %i
+
+Python:     i=1
+            while i < 255:
+                  print i
+                  i+=1
+
+Bash:       i=1
+            while [ $i -le 255 ]
+            do
+                echo $i
+                i=$(( $i + 1 ))
+            done
+```
