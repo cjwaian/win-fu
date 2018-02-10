@@ -1,9 +1,17 @@
 # win-fu #
 Windows Command Line Notes
+
 -Command Line Utilities
+
 -One Liners
+
 -Display Contents of Files
+
 -Enviromental Variables
+
+- Accounts and Groups
+
+
 
 ***
 
@@ -58,9 +66,9 @@ python:     os.environ.get('PATH')
 ### One Liners ###
 List all installed software/packages.
 ```
-Windows:    dir /s "C:\Program Files"
-Linux (apt):      apt list --installed
-Linux (yum):      yum list installed
+Windows:        dir /s "C:\Program Files"
+Linux (apt):    apt list --installed
+Linux (yum):    yum list installed
 ```
 
 ---
@@ -136,3 +144,150 @@ Linux:      export [env_key]=[env_value]
 python:     os.environ[env_key]=[env_value]
 SH/Bash:    [env_key]=[env_value]
 ```
+
+---
+
+### Accounts and Groups ###
+List all local users on a system.
+```
+Windows:    net user
+Linux:      cat /etc/passwd
+Linux:      cut -d: -f1 /etc/passwd
+```
+
+List all local groups on a system.
+```
+Windows:    net localgroup
+Linux:      cat /etc/group
+Linux:      cut -d: -f1 /etc/group
+```
+
+List all members of a group. Linux doesn't have great options.
+```
+Windows:    net localgroup [group_name]
+Linux:      getent group [group_name]
+```
+
+Create user and set password.
+```
+Windows:    net user [username] [passwd] /add
+Linux:      adduser [username]
+             passwd [username]
+```
+
+Add user to group.
+```
+Windows:    net localgroup [group_name] [username] /add
+Linux:      usermod -aG [group_name] [username]
+```
+
+Remove user.
+```
+Windows:    net user [username] /del
+Linux:      userdel [username]
+```
+
+Remove user from group.
+```
+Windows:    net localgroup [group_name] [username] /del
+Linux:      userdel [username] [group_name]
+Linux:      gpasswd -d [username] [group_name]
+```
+
+---
+
+### Firewall ###
+Show all firewall rules for all profiles.
+```
+Windows:    netsh advfirewall show allprofiles
+Linux:      iptables -t filter -L
+Linux:      firewall-cmd --list-ports
+Linux:      firewall-cmd --list-services
+```
+
+Add firewall rule to allow inbound connection.
+```
+Windows:    netsh advfirewall firewall add rule name="[rule_name]" dir=in action=allow remoteip=[?optional?] protocol=TCP localport=[port]
+
+Linux:      iptables -A INPUT -p tcp --dport [port] -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+            iptables -A OUTPUT -p tcp --sport [port] -m conntrack --ctstate ESTABLISHED -j ACCEPT
+
+Linux:      firewall-cmd --zone=[public] --add-port=[port]/tcp    (--permanent)
+            firewall-cmd --zone=[public] --add-service=[service_name]     (--permanent)
+            firewall-cmd --reload
+```
+
+
+Remove firewall rules.
+```
+Windows:    netsh advfirewall firewall del rule name="[rule_name]"
+
+Linux:      iptables -D INPUT -p tcp --dport [port] -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+            iptables -D OUTPUT -p tcp --sport [port] -m conntrack --ctstate ESTABLISHED -j ACCEPT
+
+Linux:      firewall-cmd --zone=[public] --remove-port=[port]/tcp    (--permanent)
+            firewall-cmd --zone=[public] --remove-service=[service_name]     (--permanent)
+            firewall-cmd --reload
+```
+
+Disable firewall.
+```
+Windows:    netsh advfirewall set allprofiles state off
+```
+
+---
+
+### Registry ###
+Search registry by key.
+```
+reg query [key_name]
+```
+
+Create and/or Modify registry key/values by key.
+```
+reg add [key_name] /v [key_value] /t [type] /d [data]
+```
+
+Export registry settings to files.
+```
+reg export [key_name] [path/to/file.reg]
+```
+
+Import to registry.
+```
+reg import [path/to/file.reg]
+```
+
+Remotely interact with another systems registry over SMB.
+```
+reg query \\[remote_system] [key_name]
+reg add \\[remote_system] [key_name] /v [key_value] /t [type] /d [data]
+reg export \\[remote_system] [key_name] [path/to/file.reg]
+reg import \\[remote_system] [path/to/file.reg]
+```
+
+---
+
+### SMB ###
+Note: only one SMB session permitted to the same remote system at a time.
+Initialize SMB session.
+```
+net use \\[remote_ip] [password] /u:[username]
+```
+
+Mount share over SMB.
+```
+net use * \\[remote_ip]\[share] [password] /u:[username]
+```
+
+Drop SMB session.
+```
+net use \\[remote_ip] /del
+```
+
+Drop al SMB session.
+```
+net use * /del /y
+```
+
+
