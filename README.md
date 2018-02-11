@@ -20,7 +20,11 @@
 - [Batch File Vars](./README.md#batch-file-vars)
 - [Command Line Args](./README.md#command-line-args)
 - [Running Remote Commands (psexec)](./README.md#running-remote-commands-psexec)
-
+- [Scheduling Jobs)[./README.md#scheduling-jobs)
+    - [at](./README.md#at-command)
+    - [schtasks](./README.md#schtasks-command)
+    - [sc](./README.md#sc-command)
+    - [wmic](./README.md#wmic-command)
 _Linux, Bash, & Python examples for comparison._
 
 ***
