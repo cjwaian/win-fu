@@ -20,11 +20,13 @@
 - [Batch File Vars](./README.md#batch-file-vars)
 - [Command Line Args](./README.md#command-line-args)
 - [Running Remote Commands (psexec)](./README.md#running-remote-commands-psexec)
-- [Scheduling Jobs)[./README.md#scheduling-jobs)
+- [Scheduling Jobs](./README.md#scheduling-jobs)
     - [at](./README.md#at-command)
     - [schtasks](./README.md#schtasks-command)
     - [sc](./README.md#sc-command)
     - [wmic](./README.md#wmic-command)
+    
+
 _Linux, Bash, & Python examples for comparison._
 
 ***
@@ -512,6 +514,7 @@ Bash:       example.sh [arg]
 
 ### Running Remote Commands (psexec) ###
 To run commands against a remote system leverage `psexec`, not included in Windows by default it is apart of [Microsoft Sysinternals](https://docs.microsoft.com/en-us/sysinternals/downloads/). 
+
 Features:
 - Requires SMB session
 - Run as local `SYSTEM` privileges  with `-s` flag.
@@ -546,11 +549,12 @@ Note: Pivoting via `psexec` minimizes unintended crashes etc.
 ### Scheduling Jobs ###
 In Windows, task scheduling is one of the _"most common methods"_ to run remote commands ... probably because the lack of naitive SSH *cough cough*. The advantage of this method over `psexec` is that all executables are included by default in the operating system.
 
-Pre-requisits:
+*Pre-requisits:*
 - SMB session required `net use \\[remote_ip] /u:[username] [password]`
 - Verify "Schedule" service is running `sc \\[remote_ip] query schedule`
 - Start "Schedule" service if not already running `sc \\[remote_ip] start schedule`
 - Verify  sstem time of remote system is correct`net time \\[remote_ip]`
+ 
  
 #### `at` command ####
 Only able to run as local `SYSTEM` user.
