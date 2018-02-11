@@ -25,7 +25,7 @@
     - [schtasks](./README.md#schtasks-command)
     - [sc](./README.md#sc-command)
     - [wmic](./README.md#wmic-command)
-    
+- [PowerShell](./README.md#PowerShell)
 
 _Linux, Bash, & Python examples for comparison._
 
@@ -451,6 +451,7 @@ Print a newline character.
 ```
 Windows:    echo.
 Linux:      echo "\n"
+PowerShell: "`n"
 ```
 
 ---
@@ -648,6 +649,106 @@ Monitor process status continuously.
 C:\> wmic process where name="[service name]" list brief /every:1
 ```
 
-It is important to damonize any process that pop-up `cmd.exe` in order to hide the GUI window.
+It is important to damonize any process that pop-up's `cmd.exe` in order to hide the GUI window.
 
 Terminate a running process on a system locally with `taskkill /PID [PID]`.
+
+---
+
+### PowerShell ###
+Founational commands are called `cmdlets` they use `verb-noun` naming convention. Large number of cmdlets available but there aren't that many verbs so when looking for a command start with the verb portion. PowerShell permits <kbd>TAB</kbd> completetion, <kbd>SHIFT+TAB</kbd> takes you back one assumtion.
+
+List all cmdlets: `get-command`
+
+List all "set" verb cmdlets: `get-command set*`
+
+List all "process" noun cmdlets: `get-command *process`
+
+#### Alias ####
+Alias can be used to shorten the verbose verb-noun format into something actually useable/readable ...
+
+List all alias: `alias`
+
+Find alias for cmd-let: `get-alias -Definition [cmdlet]`
+
+Alias  | Cmdlet
+------------- | -------------
+ls, dir, gci  | Get-ChildItem
+cp, copy, cpi  | Copy-Item
+mv, move, mi  | Move-Item
+sls (grep, find, findstr)  | Select-String
+man, help  | Get-Help
+cat, type, gc | Get-Content
+ps, gps  | Get-Process
+pwd, gl  | Get-Location
+
+#### Help ####
+Cmdlet `Get-Help` is aliased to `help`.
+```
+PS C:\> help [cmdlet/alias]
+PS C:\> help [cmdlet/alias] -detail
+PS C:\> help [cmdlet/alias] -examples
+PS C:\> help [cmdlet/alias] -full
+```
+
+#### Whatif ####
+Most cmdlets support the `-whatif` flag which previews an operation without actually doing it.
+```
+PS C:\> Remove-Item example.txt -whatif
+What if: Performing the operation "Remove File" on target "example.txt".
+```
+
+#### Piping ####
+When piping objects are passed through the pipe not Stdout.
+
+For example `ls | ls` would list all file in the current working directory (`ls ./`) and then pass the list to another `ls` cmd which lists all files inside of that sub-directory (`ls [subdir]`).
+
+Here is another example trying to replicate linux's `ls -la`, apparently file attributes don't include owner ...
+```
+PS C:\> ls | format-list -property Attributes, Mode, Name, LastAccessTime
+Attributes : ReadOnly, Directory
+Mode       : d-r---
+Name       : ExampleDirectory
+```
+Object attributes can be directly accessed using dot notation.
+```
+PS C:\> ls | % {$_.Attributes; $_.Mode; $_.Name; $_.LastAccessTime; "`n";}
+ReadOnly, Directory
+d-r---
+ExampleDirectory
+Thursday, February 1, 2018 10:53:58 AM
+ ```
+
+#### For Each ####
+`ForEach-Object` is the cmdlet for For Loops, aliased to `%`, it is a contained iterator for whatever set of data you pass to it
+```
+PS C:\> [cmdlet/data] | % {[cmdlet] $_}
+PS C:\> [cmdlet_1/data] | % {[cmdlet_2] $_; [cmdlet_3] $_;}
+```
+Local temporary variables used for the current object are represented as `$_`, equivalent to Javascripts `this`.
+
+The curly braces `{}` represent a code block and must be used to encapsulate the inside of the loop..
+
+Semi-colon `;` represent the end of a statement, this allows for multiple statements inside a loop; similar to bash.
+
+Nesting Pipes Examples:
+```
+PS C:\> ls | % {$_ | ? {$_.Attributes -eq "Directory"}}
+```
+
+
+#### Where (filter by property) ####
+Filter a set of objects by their property using the `Where-Object` aliased to `?`.
+
+Examples:
+```
+PS C:\> get-service | ? {$_.status -eq "running"}
+PS C:\> ls -Recurse | ? {$_.Name -eq "Users"}
+```
+
+#### Select (filter by property by creating obj) ####
+Another way to filter cmdlet output is to create new object only with the properties we are interested in.
+```
+PS C:\> ls | select Attributes,Mode,Name,LastAccessTime
+ReadOnly, Directory d-r--- ExampleDirectory       2/1/2018 10:53:58 AM
+```
