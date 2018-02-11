@@ -542,7 +542,7 @@ msf > SMBPass [hash]
 
 Note: Pivoting via `psexec` minimizes unintended crashes etc.
 
-**Other methods of running remote commands involve task scheduling, see next **
+*Other methods of running remote commands involve task scheduling, see next.*
 
 ---
 
