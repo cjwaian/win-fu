@@ -1,15 +1,25 @@
 # win-fu #
-Windows Command Line Notes
-
--Command Line Utilities
-
--One Liners
-
--Display Contents of Files
-
--Enviromental Variables
-
+Windows Command Line Notes. Linux and Python examples for comparison.
+- Command Line Utilitie
+- One Liners
+- Display Contents of Files
+- Filter Command Output
+- Enviromental Variables
 - Accounts and Groups
+- Firewall
+- Registry
+- SMB
+- Services
+- Sleep
+- Chain Commands
+- Piping Stderr
+- Echo Off
+- Dev Null
+- Newline Character
+- For Loop (While)
+- For Each Loop
+- Batch File Vars
+- Command Line Args
 
 
 
@@ -404,6 +414,7 @@ Windows:    [command] 2>> error.log
 Linux:      [command] >> error.log 2>&1
 ```
 Bash notes: https://www.tldp.org/LDP/abs/html/io-redirection.html
+
 ---
 
 ### Echo Off ###
