@@ -1,5 +1,5 @@
 # Windows Command Line Notes #
-- [Command Line Utilitie](./README.md#command-line-utilities)
+- [Command Line Utilities](./README.md#command-line-utilities)
 - [One Liners](./README.md#one-liners)
 - [Display Contents of Files](./README.md#display-contents-of-files)
 - [Filter Command Output](./README.md#filter-command-output)
@@ -39,6 +39,12 @@ List current TCP/UDP port usage.
 ```
 Windows:    netstat -na
 Linux:      netstat -tuplen
+```
+
+Get status of listening port continously
+```
+Windows:    netstat -nao 1 | find ":[port]"
+Linux:      netstat -tuplen -c | grep ":[port]"
 ```
 
 Shows arp cache. Entries are the systems which the host has sent packets to in the last 10 minutes.
@@ -636,3 +642,11 @@ Kill process by `service_name`.
 ```
 C:\> wmic /node:[remote_ip] /user:[username] /password:[password] process where name="[service_name]" delete
 ```
+
+Monitor process status continuously.
+```
+C:\> wmic process where name="[service name]" list brief /every:1
+```
+
+
+Terminate a running process on a system locally with `taskkill /PID [PID]`.
