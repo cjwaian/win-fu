@@ -648,5 +648,6 @@ Monitor process status continuously.
 C:\> wmic process where name="[service name]" list brief /every:1
 ```
 
+It is important to damonize any process that pop-up `cmd.exe` in order to hide the GUI window.
 
 Terminate a running process on a system locally with `taskkill /PID [PID]`.
