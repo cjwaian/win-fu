@@ -71,6 +71,25 @@ Linux (apt):    apt list --installed
 Linux (yum):    yum list installed
 ```
 
+Ping Sweep a `/24` network.
+```
+Windows:    for /L  %i in (1,1,255) do @ping -n 1 192.168.1.%i | find "TTL"
+
+Linux:      i=1; while [ $i -le 255 ]; do ping -c 1 192.168.1.$i | grep ttl; i=$(( $i + 1 )); done;
+
+Bash:       i=1
+            while [ $i -le 255 ]
+            do
+                ping -c1 192.168.1.$i | grep ttl
+                i=$(( $i + 1 ))
+            done
+```
+
+Read through a file containing a list of passwords and attempt to initialize an SMB session while trying each password.
+```
+Windows:    for /f %i in ([path/to/file]) do @echo %i & @net use \\[remote_ip] %i /u:[username] 2>nul && pause
+```
+
 ---
 
 ### Display Contents of Files ###
@@ -114,6 +133,16 @@ Display contents of a file continuously, will update if new lines are written to
 ```
 Linux:      tail -f [path/to/file]
 ```
+
+---
+
+### Filter Command Output ###
+Filter the output of a command, show results only if `string` is containted in the output.
+```
+Windows:    @[command] | find "[string]"
+Linux:      [command] | grep "[string]"
+```
+
 
 ---
 
@@ -337,9 +366,74 @@ Windows:    sc stop [service_name]
 Linux:      systemctl stop [service_name]
 ```
 
-### For Loops ###
-`FOR /L` = Counter
-`FOR /F` = Iterate over file contents, strings, or command output
+---
+
+### Sleep ###
+The `/t` specifies number of seconds to wait.
+```
+Windows:    timeout /t 4
+Linux:      sleep 4
+Python:     time.sleep(4)
+```
+
+Prevent stop (`CTL+C`) with `/nobreak`.
+```
+Windows:    timeout /t 4 /nobreak
+```
+
+---
+
+### Chain Commands ###
+Run second command always, even if the first command fails.
+```
+Windows:    [first_command] & [second_command]
+Linux:      [first_command] || [second_command]
+```
+Run second command only if first command succeeds.
+```
+Windows:    [first_command] && [second_command]
+Linux:      [first_command] && [second_command]
+```
+
+---
+
+### Piping Stderr ###
+Redirect Stderr to Stdout, then write to file.
+```
+Windows:    [command] 2>> error.log
+Linux:      [command] >> error.log 2>&1
+```
+Bash notes: https://www.tldp.org/LDP/abs/html/io-redirection.html
+---
+
+### Echo Off ###
+Do not display `echo` stdout.
+```
+Windows:    @echo [string]
+```
+Why would you want to do that? Why not just remove the `echo` statement?
+
+---
+
+### Dev Null ###
+```
+Windows:    echo "Hello World" > nul
+Linux:      echo "Hello World" >> /dev/null
+```
+
+---
+
+### Newline Character ###
+Print a newline character.
+```
+Windows:    echo.
+Linux:      echo "\n"
+```
+
+---
+
+### For Loop (While) ###
+`FOR /L` = More like a while loop with an incremented variable...
 Construction: `for /L %i ([start],[increment],[stop]) do [command]`
 Exmaples:
 ```
@@ -356,4 +450,45 @@ Bash:       i=1
                 echo $i
                 i=$(( $i + 1 ))
             done
+```
+
+---
+
+### For Each Loop ###
+`FOR /F` = For each loop
+Construction: `for /F [options] %i in ([data]) do [command]`
+Exmaples:
+```
+Windows:    for /F %i in ([data]) do echo %i
+
+Python:     for i in [data]:
+                print i
+
+Bash:       for i in [data]
+                 echo %i
+            done
+```
+
+---
+
+### Batch File Vars ###
+Temporary variables such as `%i` must be written as `%%i` if running from a `.bat` file. This is because command like args are represented as `%1`,`%2`,`%3` ect.
+```
+Windows:    for /F %%i in ([data]) do echo %%i
+```
+https://stackoverflow.com/questions/14509652/what-is-the-difference-between-and-in-a-cmd-file
+
+---
+
+### Command Line Args ###
+Parameters passed to a script from the commandline can be retrieved within the script by invoking special variables.
+```
+Windows:    example.bat [arg]
+            echo %1
+
+Python:     example.py [arg]
+            print sys.argv[1]
+
+Bash:       example.sh [arg]
+            echo $1
 ```
