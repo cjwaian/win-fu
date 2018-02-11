@@ -1,5 +1,4 @@
-# win-fu #
-Windows Command Line Notes. Linux and Python examples for comparison.
+# Windows Command Line Notes #
 - [Command Line Utilitie](./README.md#command-line-utilities)
 - [One Liners](./README.md#one-liners)
 - [Display Contents of Files](./README.md#display-contents-of-files)
@@ -21,7 +20,7 @@ Windows Command Line Notes. Linux and Python examples for comparison.
 - [Batch File Vars](./README.md#batch-file-vars)
 - [Command Line Args](./README.md#command-line-args)
 
-
+_Linux, Bash, & Python examples for comparison._
 
 ***
 
