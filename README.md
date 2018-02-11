@@ -566,11 +566,16 @@ Verify job has started with the command `at \\[remote_ip]`.
  
  
 #### `schtasks` command ####
-Only able to run as local `SYSTEM` user.
+Only able to run as any user.
+
 Some Windows operating systems support the 24HR time format.
+
 Start Time must be in `HH:MM:SS` format.
+
 Start Date must be in `MM/DD/YYYY` format?
+
 Frequency must one of the following `MINUTE, HOURLY, DAILY, WEEKLY, MONTHLY, ONCE, ONSTART, ONLOGON, ONIDLE`.
+
 Task Name is important so we can `sc query` it for status.
 ```
 C:\> schtasks /create /tn [taskname] /s [remote_ip] /u [username] /p [password] /sc [frequency] /st [start_time] /sd [start_date] /tr [command]
