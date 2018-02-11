@@ -1,25 +1,25 @@
 # win-fu #
 Windows Command Line Notes. Linux and Python examples for comparison.
-- Command Line Utilitie
-- One Liners
-- Display Contents of Files
-- Filter Command Output
-- Enviromental Variables
-- Accounts and Groups
-- Firewall
-- Registry
-- SMB
-- Services
-- Sleep
-- Chain Commands
-- Piping Stderr
-- Echo Off
-- Dev Null
-- Newline Character
-- For Loop (While)
-- For Each Loop
-- Batch File Vars
-- Command Line Args
+- [Command Line Utilitie](./README.md#command-line-utilities)
+- [One Liners](./README.md#one-liners)
+- [Display Contents of Files](./README.md#display-contents-of-files)
+- [Filter Command Output](./README.md#filter-command-output)
+- [Enviromental Variables](./README.md#enviromental-variables)
+- [Accounts and Groups](./README.md#accounts-and-groups)
+- [Firewall](./README.md#firewall)
+- [Registry](./README.md#registry)
+- [SMB](./README.md#smb)
+- [Services](./README.md#services)
+- [Sleep](./README.md#sleep)
+- [Chain Commands](./README.md#chain-commands)
+- [Piping Stderr](./README.md#piping-stderr)
+- [Echo Off](./README.md#echo-off)
+- [Dev Null](./README.md#dev-null)
+- [Newline Character](./README.md#newline-character)
+- [For Loop (While)](./README.md#for-loop-while)
+- [For Each Loop](./README.md#for-each-loop)
+- [Batch File Vars](./README.md#batch-file-vars)
+- [Command Line Args](./README.md#command-line-args)
 
 
 
