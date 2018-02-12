@@ -25,7 +25,7 @@
     - [schtasks](./README.md#schtasks-command)
     - [sc](./README.md#sc-command)
     - [wmic](./README.md#wmic-command)
-- [PowerShell](./README.md#powershell
+- [PowerShell](./README.md#powershell)
     - [Alias](./README.md#alias)
     - [Help](./README.md#help)
     - [Whatif](./README.md#whatif)
