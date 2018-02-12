@@ -176,6 +176,7 @@ Linux:      set
 Linux:      env
 Linux:      printenv
 python:     print os.environ     <--- returns dict
+PowerShell: ls env:
 ```
 
 Display a specific enviromental variable such as `username` or `path`.
@@ -184,6 +185,7 @@ Windows:    set [env_key]
 Linux:      printenv [env_key]
 python:     print os.environ.get("[env_key]")
 SH/Bash:    echo $[env_key]
+PowerShell: echo $env:[env_key]
 ```
 
 
@@ -735,7 +737,10 @@ Nesting Pipes Examples:
 ```
 PS C:\> ls | % {$_ | ? {$_.Attributes -eq "Directory"}}
 ```
-
+To iterate over a range, use `1..100` notation, similar to pythons `range(1,100)`.
+```
+PS C:\> 1..100 | % {echo $_}
+```
 
 #### Where (filter by property) ####
 Filter a set of objects by their property using the `Where-Object` aliased to `?`.
@@ -746,9 +751,59 @@ PS C:\> get-service | ? {$_.status -eq "running"}
 PS C:\> ls -Recurse | ? {$_.Name -eq "Users"}
 ```
 
-#### Select (filter by property by creating obj) ####
+#### Select (filter by property - create obj) ####
 Another way to filter cmdlet output is to create new object only with the properties we are interested in.
 ```
 PS C:\> ls | select Attributes,Mode,Name,LastAccessTime
 ReadOnly, Directory d-r--- ExampleDirectory       2/1/2018 10:53:58 AM
+```
+
+#### Select String (cat+grep) ####
+Read a file and search for a specific string with `Select-String` aliased to `sls`. Similar to combining `cat [filename] | grep [pattern]` into one command.
+```
+PS C:\> select-string -path C:\path\to\files\*.txt -pattern [pattern]
+```
+
+Using what we have already learned, to build a command to recursively search through a directory scanning each file for a pattern, similar to 'grep -r "[pattern]" .`
+```
+PS C:\> ls -r C:\path\to\dir | % {sls -path $_ -pattern [pattern]} 2>$null
+```
+
+#### Count ####
+Count using `([data]).count`. This example will iterate through a directory and count the number of files inside the subdirectories.
+```
+PS C:\> ls | % {echo $_.Name; (ls $_).count; "`n";}
+```
+
+#### Variables ####
+Contruct variables like so, `$var=[data]`; access them with `$var`.
+
+#### Concatenate ####
+Concatenate variables by wrappinging in `$()` such as `$($(var1) $(var2))`. Another method is similar to pythons `%s` notation, `"{0} {1}" -f $var1,$var2`.
+```
+PS C:\> $hello="Hello"
+PS C:\> $world="World"
+
+PS C:\> echo ("{0} {1}!" -f $hello,$world)
+Hello World!
+
+PS C:\> echo $("$($hello) $($world)!")
+Hello World!
+
+PS C:\> ls | % {echo "$($_.Name) $((ls $_).count) `n";}
+
+PS C:\> ls | % {echo ("{0} {1} `n" -f $_.Name,(ls $_).count);}
+```
+
+#### Out-Host (obj to str) ####
+Convert objects to string using the `Out-Host` cmdlet, aliased to `oh`. Add pagination with `-paging`.
+```
+PS C:\> ls -r | Out-Host -paging
+```
+
+
+#### Write to File ####
+Write objects/strings to file with the `Out-File` cmdlet. no alias.
+```
+PS C:\> ls | Out-File C:\path\to\file.txt
 ```
