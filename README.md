@@ -819,3 +819,26 @@ Write objects/strings to file with the `Out-File` cmdlet. no alias.
 ```
 PS C:\> ls | Out-File C:\path\to\file.txt
 ```
+
+#### Operators ####
+https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-6
+
+Op  |  Description
+--- | ---------------
+-eq | equals
+-ne | not equals
+-gt | greater than
+-ge | greater than or equal
+-lt | less than
+-le | less than or equal
+-like | Returns true when string matches wildcard pattern
+-notlike | Returns true when string does not match wildcard pattern
+-match | Returns true when string matches regex pattern; $matches contains matching strings
+-notmatch | Returns true when string does not match regex pattern; $matches contains matching strings
+-contains | Returns true when reference value contained in a collection
+-notcontains | Returns true when reference value not contained in a collection
+-in | Returns true when test value contained in a collection
+-notin | Returns true when test value not contained in a collection
+-replace | Replaces a string pattern 
+-is | Returns true if both object are the same type
+-isnot | Returns true if the objects are not the same type
