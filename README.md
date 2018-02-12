@@ -681,6 +681,8 @@ List all "set" verb cmdlets: `get-command set*`
 
 List all "process" noun cmdlets: `get-command *process`
 
+List all object properties: `[object] | Select-Object -Property *`
+
 #### Alias ####
 Alias can be used to shorten the verbose verb-noun format into something actually useable/readable ...
 
