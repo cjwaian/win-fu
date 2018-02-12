@@ -38,6 +38,7 @@
     - [Concatenate](./README.md#concatenate)
     - [Out-Host (obj to str)](./README.md#out-host-obj-to-str)
     - [Write to File](./README.md#write-to-file)
+    - [Operators](./README.md#operators)
 
 _Linux, Bash, & Python examples for comparison._
 
