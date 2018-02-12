@@ -457,6 +457,8 @@ Why would you want to do that? Why not just remove the `echo` statement?
 ```
 Windows:    echo "Hello World" > nul
 Linux:      echo "Hello World" >> /dev/null
+PowerShell: echo "Hello World" 2> $null    <--stderr
+PowerShell: echo "Hello World" | out-null  <--stdout
 ```
 
 ---
