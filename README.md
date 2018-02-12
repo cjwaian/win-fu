@@ -1,4 +1,4 @@
-# Windows Command Line Notes #
+# Windows Command Line & Powershell Notes #
 - [Command Line Utilities](./README.md#command-line-utilities)
 - [One Liners](./README.md#one-liners)
 - [Display Contents of Files](./README.md#display-contents-of-files)
