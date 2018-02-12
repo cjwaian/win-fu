@@ -25,7 +25,19 @@
     - [schtasks](./README.md#schtasks-command)
     - [sc](./README.md#sc-command)
     - [wmic](./README.md#wmic-command)
-- [PowerShell](./README.md#PowerShell)
+- [PowerShell](./README.md#powershell
+    - [Alias](./README.md#alias)
+    - [Help](./README.md#help)
+    - [Whatif](./README.md#whatif)
+    - [Piping](./README.md#piping)
+    - [For Each](./README.md#for-each)
+    - [Where (filter by property)](./README.md#where-filter-by-property)
+    - [Select String (cat+grep)](./README.md#select-filter-by-property---create-obj)
+    - [Count](./README.md#count)
+    - [Variables](./README.md#variables)
+    - [Concatenate](./README.md#concatenate)
+    - [Out-Host (obj to str)](./README.md#out-host-obj-to-str)
+    - [Write to File](./README.md#write-to-file)
 
 _Linux, Bash, & Python examples for comparison._
 
